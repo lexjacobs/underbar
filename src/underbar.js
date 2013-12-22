@@ -37,12 +37,23 @@ var _ = { };
   //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
-  _.each = function(collection, iterator) {
-    var keys = Object.keys(collection);
-    for (var i=0; i < keys.length; i ++) {
-      iterator(collection[keys[i]], i, collection);
+_.each = function (collection, iterator) {
+    // copied the next 3 lines from _.underscore. Not sure if they're needed yet. Keeping commented.
+    // if (collection === null) {
+    //     return collection;
+    // } else 
+    if (collection.length === +collection.length) {
+        for (var i = 0; i < collection.length; i++) {
+            iterator(collection[i], i, collection);
+        }
+    } else {
+      var keys = Object.keys(collection);
+      for (var j=0; j < keys.length; j++) {
+        iterator(collection[keys[j]], keys[j], collection);
+      }
     }
-  };
+};
+
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
