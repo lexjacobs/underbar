@@ -74,7 +74,15 @@ _.each = function (collection, iterator) {
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var isTrue = [];
+    _.each (collection, function(n) {
+      if (test(n)) {
+        isTrue.push(n);
+      }
+    });
+    return isTrue;
   };
+
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
