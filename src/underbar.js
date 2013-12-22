@@ -48,8 +48,8 @@ _.each = function (collection, iterator) {
         }
     } else {
       var keys = Object.keys(collection);
-      for (var j=0; j < keys.length; j++) {
-        iterator(collection[keys[j]], keys[j], collection);
+      for (var i=0; i < keys.length; i++) {
+        iterator(collection[keys[i]], keys[i], collection);
       }
     }
 };
