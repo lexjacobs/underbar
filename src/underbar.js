@@ -102,6 +102,8 @@ var _ = { };
   _.invoke = function(collection, functionOrKey, args) {
   };
 
+// STOP HERE FOR NOW!!
+
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
