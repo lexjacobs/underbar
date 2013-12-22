@@ -86,9 +86,19 @@ _.each = function (collection, iterator) {
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
+    var isFalse = [];
+    _.each (collection, function(n) {
+      if (test(n) === false) {
+        isFalse.push(n);
+      }
+    });
+    return isFalse;
+  };
+
+
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-  };
+  
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
