@@ -38,6 +38,10 @@ var _ = { };
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
+    var keys = Object.keys(collection);
+    for (var i=0; i < keys.length; i ++) {
+      iterator(collection[keys[i]], i, collection);
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -101,6 +105,8 @@ var _ = { };
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
   };
+
+// STOP HERE FOR NOW!!
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
