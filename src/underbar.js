@@ -38,10 +38,10 @@ var _ = { };
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
 _.each = function (collection, iterator) {
-    // copied the next 3 lines from _.underscore. Not sure if they're needed yet. Keeping commented.
-    // if (collection === null) {
-    //     return collection;
-    // } else 
+    // implementing the null check from underscore, since typeof null = object, which could be a problem.
+    if (collection === null) {
+      return collection;
+    } else
     if (collection.length === +collection.length) {
         for (var i = 0; i < collection.length; i++) {
             iterator(collection[i], i, collection);
@@ -86,14 +86,8 @@ _.each = function (collection, iterator) {
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
-    var isFalse = [];
-    _.each (collection, function(n) {
-      if (test(n) === false) {
-        isFalse.push(n);
-      }
-    });
-    return isFalse;
-  };
+      return test(collection);
+    };
 
 
     // TIP: see if you can re-use _.filter() here, without simply
