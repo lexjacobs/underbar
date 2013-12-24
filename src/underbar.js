@@ -103,6 +103,14 @@ var _ = { };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var set = array.sort();
+    var unique = [];
+    _.each(set, function(item){
+      if (unique.indexOf(item) < 0) {
+        unique.push(item);
+      }
+    });
+    return unique;
   };
 
 
