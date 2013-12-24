@@ -90,7 +90,10 @@ var _ = { };
   //   expect(odds).to.eql([1, 3, 5]);
 
   // Return all elements of an array that don't pass a truth test.
-  _.reject = function(collection, test){};
+  
+  _.reject = function(collection, test) {
+    return _.filter(collection, test);
+  };
 
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
