@@ -37,22 +37,22 @@ var _ = { };
   //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
-_.each = function (collection, iterator) {
-    // implementing the null check from underscore, since typeof null = object, which could be a problem.
-    if (collection === null) {
-      return collection;
-    } else
-    if (collection.length === +collection.length) {
-        for (var i = 0; i < collection.length; i++) {
-            iterator(collection[i], i, collection);
+  _.each = function (collection, iterator) {
+      // implementing the null check from underscore, since typeof null = object, which could be a problem.
+      if (collection === null) {
+        return collection;
+      } else
+      if (collection.length === +collection.length) {
+          for (var i = 0; i < collection.length; i++) {
+              iterator(collection[i], i, collection);
+          }
+      } else {
+        var keys = Object.keys(collection);
+        for (var i=0; i < keys.length; i++) {
+          iterator(collection[keys[i]], keys[i], collection);
         }
-    } else {
-      var keys = Object.keys(collection);
-      for (var i=0; i < keys.length; i++) {
-        iterator(collection[keys[i]], keys[i], collection);
       }
-    }
-};
+  };
 
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -74,21 +74,23 @@ _.each = function (collection, iterator) {
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
-    var isTrue = [];
-    _.each (collection, function(n) {
-      if (test(n)) {
-        isTrue.push(n);
+    var trueSet = [];
+    _.each (collection, function(item) {
+      if (test(item)) {
+        trueSet.push(item);
       }
     });
-    return isTrue;
+    return trueSet;
   };
 
+  // What reject is doing: 
+  // var isEven = function(num) { return num % 2 === 0; };
+  //   var odds = _.reject([1, 2, 3, 4, 5, 6], isEven);
+
+  //   expect(odds).to.eql([1, 3, 5]);
 
   // Return all elements of an array that don't pass a truth test.
-  _.reject = function(collection, test) {
-      return test(collection);
-    };
-
+  _.reject = function(collection, test){};
 
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
