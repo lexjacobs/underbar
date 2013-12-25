@@ -146,8 +146,14 @@ var _ = { };
 
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
+ 
+  // If you have an array myParameters and would like to call a function myFunction using the elements in the array as parameters, you can use myFunction.apply(context, myParameters). The first parameter, context, is the execution context for your function call. From inside myFunction, you can access it as this. For this exercise, you should be fine passing in the calling function's this for context. If you're curious, you can read more in the documentation for apply.
+
   _.invoke = function(collection, functionOrKey, args) {
-  };
+    return _.map(collection, function(item){
+       return functionOrKey.apply(item);
+    });
+      };
 
 // STOP HERE FOR NOW!!
 
