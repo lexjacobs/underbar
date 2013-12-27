@@ -165,8 +165,6 @@ var _ = {};
     }
   };
 
-// STOP HERE FOR NOW!!
-
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
@@ -353,6 +351,7 @@ var _ = {};
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {};
 
+  // STOP HERE FOR NOW
 
   /**
    * Note: This is the end of the pre-course curriculum. Feel free to continue,
