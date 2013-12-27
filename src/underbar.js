@@ -151,7 +151,7 @@ var _ = { };
 
   _.invoke = function(collection, functionOrKey, args) {
     return _.map(collection, function(item){
-       return functionOrKey.apply(item);
+       return (typeof functionOrKey === 'function' ? functionOrKey : functionOrKey[functionOrKey]).apply(item);
     });
       };
 
