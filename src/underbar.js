@@ -169,13 +169,10 @@ var _ = { };
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-  var previousValue = null;
-  if(accumulator !== undefined) {
-    previousValue = accumulator;
-  }
+  var previousValue;
   _.each(collection, function(item){
-    if (previousValue === null) {
-      previousValue = item;
+    if (previousValue === undefined) {
+      previousValue = accumulator;
     }
     previousValue = iterator(previousValue, item);
   });
@@ -198,6 +195,12 @@ var _ = { };
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    return _.reduce(collection, function(prev, item){
+      if (prev === false){
+        return false;
+      }
+      return iterator(item) === true;
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
