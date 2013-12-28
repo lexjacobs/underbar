@@ -325,7 +325,7 @@ var _ = { };
   _.defaults = function(obj) {
     _.each(arguments, function(item){
       for (var props in item) {
-        if (obj[props] == undefined){
+        if (obj[props] === undefined){
           obj[props] = item[props];
         }
       }
