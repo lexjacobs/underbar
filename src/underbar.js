@@ -231,7 +231,7 @@ var _ = { };
       if(previousValue === false) {
         return false;
       }
-      // ignore the linter - the == must be used to work for boolean comparison!
+      // ignore the linter - the == Must be used to work for boolean comparison!
       // the non-null empty array [] and object {} are true:
        if(item !== null && typeof item === 'object' && Object.keys(item).length === 0) {
       return true;
@@ -255,10 +255,40 @@ var _ = { };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
-  _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
-  };
+  
+  // attempt one:
+  // _.some = function(collection, iterator) {
+  //   // TIP: There's a very clever way to re-use every() here.
+  //   var anyTruth = false;
+  //  _.every(collection, function(item){
+  //     if (iterator(item) === true){
+  //       anyTruth = true;
+  //     }
+  //   });
+  // return anyTruth;
+  // };
 
+  // attempt 2 progress, but not all working
+  // _.some = function(collection, iterator) {
+  //   var anyTruth = _.map(collection, function(item){
+  //     return (iterator === 'undefined' ? iterator : _.identity)(item) == true;
+  //   });
+  //   return anyTruth.indexOf(true) > -1;
+  // };
+
+  // attempt 3
+
+  // create a _.map of _.every on _.each value in the collection. if any of them come back true, return true
+  _.some = function(collection, iterator) {
+  //   // TIP: There's a very clever way to re-use every() here.
+    var anyTruth = false;
+    _.each(collection, function(item){
+      if (!!iterator(item) == true && anyTruth == false){
+        anyTruth = true;
+      }
+    });
+    return anyTruth;
+  };
 
   /**
    * OBJECTS
