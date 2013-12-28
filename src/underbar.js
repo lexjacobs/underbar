@@ -223,20 +223,30 @@ var _ = { };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    // if(collection == []){
-    //   return true;
-    // }
-    if(iterator === undefined){
-      iterator = _.identity;
-    }
-    // TIP: Try re-using reduce() here.
-    return _.reduce(collection, function(prev, item){
-      if (prev === false){
+    // what seems to be missing is the check for the empty array [] or object {}
+    return _.reduce(collection, function(previousValue, item){
+      if(previousValue === false) {
         return false;
       }
-      return iterator(item) === true;
+      // ignore the linter - the == must be used to work for boolean comparison!
+      return (iterator === undefined ? _.identity : iterator)(item) == true;
     }, true);
   };
+
+  // pasting in underscore's version for clues:
+
+  //  _.every = function(obj, iterator, context) {
+  //   iterator || (iterator = _.identity);
+  //   var result = true;
+  //   if (obj == null) return result;
+  //   //if (nativeEvery && obj.every === nativeEvery) return obj.every(iterator, context);
+  //   _.each(obj, function(value, index, list) {
+  //     if (!(result = result && iterator.call(context, value, index, list))) return breaker;
+  //   });
+  //   return !!result;
+  // };
+
+
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
