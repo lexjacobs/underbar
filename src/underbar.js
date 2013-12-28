@@ -183,14 +183,30 @@ var _ = { };
   
   // this one was pre-defined. attempting to recreate this myself.
 
+  // _.contains = function(collection, target) {
+  //   var found = false;
+  //   _.each(collection, function(x){
+  //     if (x == target && found === false){
+  //       found = true;
+  //     }
+  //   });
+  //   return found;
+  // };
+
+  // refactor with 'each' worked. now trying to replicate as 'reduce':
+
   _.contains = function(collection, target) {
-    var found = false;
-    _.each(collection, function(x){
-      if (x == target && found === false){
-        found = true;
+    return _.reduce(collection, function(wasFound, item) {
+      if(wasFound){
+        return true;
       }
-    });
-    return found;
+      // can turn next 4 lines into one with the following comment.
+      if(item == target){
+        wasFound = true;
+      }
+      return wasFound;
+      // aka: return item === target;
+    }, false);
   };
 
   // _.contains = function(collection, target) {
