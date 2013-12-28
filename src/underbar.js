@@ -223,6 +223,9 @@ var _ = { };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    if(typeof collection === 'object' && Object.keys(collection).length === 0) {
+      return true;
+    }
     // what seems to be missing is the check for the empty array [] or object {}
     return _.reduce(collection, function(previousValue, item){
       if(previousValue === false) {
