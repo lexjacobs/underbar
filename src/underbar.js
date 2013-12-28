@@ -280,10 +280,12 @@ var _ = { };
 
   // create a _.map of _.every on _.each value in the collection. if any of them come back true, return true
   _.some = function(collection, iterator) {
-  //   // TIP: There's a very clever way to re-use every() here.
+    if (iterator === undefined) {
+      iterator = _.identity;}
+   // TIP: There's a very clever way to re-use every() here.
     var anyTruth = false;
     _.each(collection, function(item){
-      if (!!iterator(item) == true && anyTruth == false){
+      if (!!iterator(item) === true  && anyTruth === false){
         anyTruth = true;
       }
     });
