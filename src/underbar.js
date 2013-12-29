@@ -372,13 +372,13 @@ _.once = function(func) {
     // so that they'll remain available to the newly-generated function every
     // time it's called.
     var result;
-    var previously = false;
+    var alreadyCalled = false;
     // TIP: We'll return a new function that delegates to the old one, but only
     // if it hasn't been called before.
     return function() {
-        if (previously === false) {
+        if (alreadyCalled === false) {
           result = func.apply(this, arguments);
-          previously = true;
+          alreadyCalled = true;
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
         }
@@ -395,8 +395,16 @@ _.once = function(func) {
   // _.memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+  
   _.memoize = function(func) {
   };
+
+  // this is a cheat: REDO!
+  // _.memoize = function(func) {
+  //   return function() {
+  //     return func.apply(this, arguments);
+  //   };
+  // };
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
