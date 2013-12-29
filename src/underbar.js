@@ -345,26 +345,49 @@ var _ = { };
 
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
-  _.once = function(func) {
+  // _.once = function(func) {
+  //   // TIP: These variables are stored in a "closure scope" (worth researching),
+  //   // so that they'll remain available to the newly-generated function every
+  //   // time it's called.
+  //   var alreadyCalled = false;
+  //   var result;
+
+  //   // TIP: We'll return a new function that delegates to the old one, but only
+  //   // if it hasn't been called before.
+  //   return function() {
+  //     if (!alreadyCalled) {
+  //       // TIP: .apply(this, arguments) is the standard way to pass on all of the
+  //       // infromation from one function call to another.
+  //       result = func.apply(this, arguments);
+  //       alreadyCalled = true;
+  //     }
+  //     // The new function always returns the originally computed result.
+  //     return result;
+  //   };
+  // };
+
+  // re-creating _.once after studying it above:
+_.once = function(func) {
     // TIP: These variables are stored in a "closure scope" (worth researching),
     // so that they'll remain available to the newly-generated function every
     // time it's called.
-    var alreadyCalled = false;
     var result;
-
+    var previously = false;
     // TIP: We'll return a new function that delegates to the old one, but only
     // if it hasn't been called before.
     return function() {
-      if (!alreadyCalled) {
+        if (previously === false) {
+          result = func.apply(this, arguments);
+          previously = true;
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
-        result = func.apply(this, arguments);
-        alreadyCalled = true;
-      }
+        }
+        return result;
+      };
       // The new function always returns the originally computed result.
-      return result;
-    };
+      
   };
+
 
   // Memoize an expensive function by storing its results. You may assume
   // that the function takes only one argument and that it is a primitive.
