@@ -396,8 +396,41 @@ _.once = function(func) {
   // already computed the result for the given argument and return that value
   // instead if possible.
   
-  _.memoize = function(func) {
+  _.memoize = function(func, hasher) {
+    if (hasher === undefined) {
+      hasher = _.identity;
+    }
+    var memo = {};
+    return function() {
+      var key = func.apply(this, arguments);
+      console.log(memo);
+      if (key in memo === true) {
+        return memo[key];
+      } else {
+         memo[key] = func.apply(this, arguments);
+         return memo[key];
+      }
+
+      //return (key in memo) ? memo[key] : (memo[key] = func.apply(this, arguments));
+    };
   };
+
+      fib = function(n) {
+      if(n < 2){ return n; }
+      return fib(n - 1) + fib(n - 2);
+    };
+
+    fastFib = _.memoize(fib);
+
+ // underscore documentation:
+ // _.memoize = function(func, hasher) {
+ //    var memo = {};
+ //    hasher || (hasher = _.identity);
+ //    return function() {
+ //      var key = hasher.apply(this, arguments);
+ //      return _.has(memo, key) ? memo[key] : (memo[key] = func.apply(this, arguments));
+ //    };
+ //  };
 
   // this is a cheat: REDO!
   // _.memoize = function(func) {
