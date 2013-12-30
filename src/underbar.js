@@ -446,8 +446,11 @@ _.once = function(func) {
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+  return setTimeout (func, wait);
   };
 
+// setTimeout( expression, timeout );
+// function which can be passed the time after which the expression will be executed.
 
   /**
    * ADVANCED COLLECTION OPERATIONS
