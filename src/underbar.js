@@ -199,7 +199,7 @@ var _ = {};
       if (wasFound) {
         return true;
       }
-      // can turn next 4 lines into one with the following comment.
+      // can turn next 4 lines into one with 'return item === target;''
       if (item == target) {
         wasFound = true;
       }
