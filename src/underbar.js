@@ -474,6 +474,19 @@ _.once = function(func) {
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+  // make a copy of the array
+  var copy = array.slice();
+  // set a loop based on the current length of the array
+  for (var i = copy.length; i > 0; i--) {
+  // generate a random number based on the current length of the array
+  var clip = Math.floor(Math.random()*copy.length);
+  // splice the item at the position of the random number to the end of the array
+  copy.push(copy.splice(clip,1)[0]);
+  }
+  // decrement and repeat until the array length is 0
+  // return the shuffled array copy
+  console.log(copy);
+  return copy;
   };
 
   // STOP HERE FOR NOW
