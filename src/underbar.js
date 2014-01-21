@@ -95,17 +95,30 @@ var _ = {};
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    return _.filter(collection, function(item){
-       return !test(item);
+    return _.filter(collection, function(item) {
+      return !test(item);
     });
   };
 
   // Produce a duplicate-free version of the array.
-  _.uniq = function(array) {};
+  _.uniq = function(array) {
+    var noDup = [];
+    _.each(array, function(item) {
+      if (noDup.indexOf(item) < 0) {
+        noDup.push(item);
+      }
+    });
+    return noDup;
+  };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(array, iterator) {
+    var results = [];
+    _.each(array, function(item) {
+      results.push(iterator(item));
+    });
+    return results;
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -121,17 +134,31 @@ var _ = {};
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(array, propertyName) {
+    return _.map(array, function(item) {
+      return item[propertyName];
+    });
+
     // TIP: map is really handy when you want to transform an array of
     // values into a new array of values. _.pluck() is solved for you
     // as an example of this.
-    return _.map(array, function(value) {
-      return value[propertyName];
-    });
+    // return _.map(array, function(value) {
+    //   return value[propertyName];
+    // });
   };
 
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
-  _.invoke = function(collection, functionOrKey, args) {};
+  _.invoke = function(collection, functionOrKey, args) {
+    if (typeof functionOrKey === 'string') {
+      return _.each(collection, function(item) {
+        return functionOrKey[functionOrKey].apply(item);
+      });
+    } else if (typeof functionOrKey === 'function') {
+      return _.each(collection, function(item) {
+        return functionOrKey.apply(item);
+      });
+    }
+  };
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
@@ -146,7 +173,9 @@ var _ = {};
   //   var sum = _.reduce(numbers, function(total, number){
   //     return total + number;
   //   }, 0); // should be 6
-  _.reduce = function(collection, iterator, accumulator) {};
+  _.reduce = function(collection, iterator, accumulator) {
+    
+  };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
