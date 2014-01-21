@@ -37,24 +37,48 @@ var _ = {};
   //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
-  _.each = function(collection, iterator) {};
+  _.each = function(collection, iterator) {
+    var i;
+    var result = [];
+    if (collection === null) {
+      return collection;
+    } else if (typeof collection === 'object' && Array.isArray(collection) === true) {
+      for (i = 0; i < collection.length; i++) {
+        result.push(iterator(collection[i], i, collection));
+      }
+    } else if (typeof collection === 'object' && Array.isArray(collection) === false) {
+      for (i = 0; i < Object.keys(collection).length; i++) {
+        result.push(iterator(collection[Object.keys(collection)[i]], Object.keys(collection)[i], collection));
+      }
+    }
+    return result;
+  };
+
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target) {
-    // TIP: Here's an example of a function that needs to iterate, which we've
-    // implemented for you. Instead of using a standard `for` loop, though,
-    // it uses the iteration helper `each`, which you will need to write.
     var result = -1;
-
     _.each(array, function(item, index) {
       if (item === target && result === -1) {
         result = index;
       }
     });
-
     return result;
   };
+  // TIP: Here's an example of a function that needs to iterate, which we've
+  // implemented for you. Instead of using a standard `for` loop, though,
+  // it uses the iteration helper `each`, which you will need to write.
+  // var result = -1;
+
+  // _.each(array, function(item, index) {
+  //   if (item === target && result === -1) {
+  //     result = index;
+  //   }
+  // });
+
+  // return result;
+  // };
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {};
