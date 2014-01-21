@@ -174,19 +174,28 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-    var total = accumulator;
+    var previousValue = accumulator;
     _.each(collection, function(item) {
-      if (total !== undefined) {
-        total = iterator(total, item);
+      if (previousValue !== undefined) {
+        previousValue = iterator(previousValue, item);
       } else {
-        total = item;
+        previousValue = item;
       }
     });
-    return total;
+    return previousValue;
   };
 
   // Determine if the array or object contains a given value (using `===`).
-  _.contains = function(collection, target) {}
+  _.contains = function(collection, target) {
+    var found = false;
+    return _.reduce(collection, function(found, item) {
+      if (found === true) {
+        return true;
+      }
+      return item === target;
+    });
+  };
+
   // TIP: Many iteration problems can be most easily expressed in
   // terms of reduce(). Here's a freebie to demonstrate!
   //   return _.reduce(collection, function(wasFound, item) {
@@ -197,9 +206,27 @@ var _ = {};
   //   }, false);
   // };
 
+  // another simple way to do _.contains:
+  // _.contains = function(collection, target) {
+  //     var result = false;
+  //     _.each(collection, function(item) {
+  //       if (item === target) {
+  //         result = true;
+  //       }
+  //     });
+  //     return result;
+  //   };
+
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    var result = true;
+    return _.reduce(collection, function(result, item) {
+      if (result === false) {
+        return false;
+      }
+      result = iterator(item);
+    }, true);
     // TIP: Try re-using reduce() here.
   };
 
