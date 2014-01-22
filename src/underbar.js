@@ -340,7 +340,21 @@ var _ = {};
   // _.memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {};
+
+  _.memoize = function(func) {
+    var result = {};
+    return function() {
+      var key = arguments[0];
+      console.log(arguments);
+      if (key in result) {
+        return result[key];
+      } else {
+      result[key] = func.apply(this, arguments);
+      console.log(result);
+      return result[key];
+      }
+    };
+  };
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -390,9 +404,6 @@ var _ = {};
     }
     return arrayCopy;
   };
-
-  
-
 
   /**
    * Note: This is the end of the pre-course curriculum. Feel free to continue,
