@@ -237,7 +237,16 @@ var _ = {};
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-
+    if (iterator === undefined) {
+      iterator = _.identity;
+    }
+    var result = true;
+    return _.reduce(collection, function(result, item) {
+      if (result == true) {
+        return true;
+      }
+      return !!iterator(item);
+    }, false);
     // TIP: There's a very clever way to re-use every() here.
   };
 
@@ -260,11 +269,27 @@ var _ = {};
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {};
+  _.extend = function(obj) {
+    _.each(arguments, function(item) {
+      for (var prop in item) {
+        obj[prop] = item[prop];
+      }
+    });
+    return obj;
+  };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {};
+  _.defaults = function(obj) {
+    _.each(arguments, function(item) {
+      for (var prop in item) {
+        if (obj[prop] === undefined) {
+          obj[prop] = item[prop];
+        }
+      }
+    });
+    return obj;
+  };
 
 
   /**
@@ -278,24 +303,35 @@ var _ = {};
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
   _.once = function(func) {
-    // TIP: These variables are stored in a "closure scope" (worth researching),
-    // so that they'll remain available to the newly-generated function every
-    // time it's called.
     var alreadyCalled = false;
     var result;
 
-    // TIP: We'll return a new function that delegates to the old one, but only
-    // if it hasn't been called before.
     return function() {
-      if (!alreadyCalled) {
-        // TIP: .apply(this, arguments) is the standard way to pass on all of the
-        // infromation from one function call to another.
+      if (alreadyCalled !== true) {
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
-      // The new function always returns the originally computed result.
       return result;
     };
+
+    // TIP: These variables are stored in a "closure scope" (worth researching),
+    // so that they'll remain available to the newly-generated function every
+    // time it's called.
+    // var alreadyCalled = false;
+    // var result;
+
+    // // TIP: We'll return a new function that delegates to the old one, but only
+    // // if it hasn't been called before.
+    // return function() {
+    //   if (!alreadyCalled) {
+    //     // TIP: .apply(this, arguments) is the standard way to pass on all of the
+    //     // infromation from one function call to another.
+    //     result = func.apply(this, arguments);
+    //     alreadyCalled = true;
+    //   }
+    //   // The new function always returns the originally computed result.
+    //   return result;
+    // };
   };
 
   // Memoize an expensive function by storing its results. You may assume
@@ -312,7 +348,29 @@ var _ = {};
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {};
+  _.delay = function(func, wait) {
+    if (arguments.length <= 2) {
+      setTimeout(function() {
+        func.apply(this, args);
+      }, wait);
+    } else {
+      var args = [];
+      _.each(arguments, function(item) {
+        args.push(item);
+      });
+      setTimeout(function() {
+        func.apply(this, args.slice(2));
+      }, wait);
+    }
+  };
+
+
+
+  // setTimeout(func.apply(this, args.slice(2)), wait);
+
+
+
+  // setTimeout(arguments.length > 2 ? func.apply(this, arguments.slice(1)) : func, wait);
 
 
   /**
