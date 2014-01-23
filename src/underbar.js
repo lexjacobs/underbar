@@ -149,13 +149,16 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    // pass in (item, args) . call more discrete. apply can pass in a list.
     if (typeof functionOrKey === 'string') {
       return _.each(collection, function(item) {
-        return functionOrKey[functionOrKey].apply(item);
+        console.log(functionOrKey[functionOrKey]);
+        console.log(functionOrKey);
+        return functionOrKey[functionOrKey].apply(item, args);
       });
     } else if (typeof functionOrKey === 'function') {
       return _.each(collection, function(item) {
-        return functionOrKey.apply(item);
+        return functionOrKey.apply(item, args);
       });
     }
   };
