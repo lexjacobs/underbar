@@ -44,7 +44,7 @@ var _ = {};
       return collection;
     } else if (typeof collection === 'object' && Array.isArray(collection) === true) {
       for (i = 0; i < collection.length; i++) {
-       iterator(collection[i], i, collection);
+        iterator(collection[i], i, collection);
       }
     } else if (typeof collection === 'object' && Array.isArray(collection) === false) {
       for (i = 0; i < Object.keys(collection).length; i++) {
@@ -153,13 +153,13 @@ var _ = {};
       return item[propertyName];
     });
   };
-    // TIP: map is really handy when you want to transform an array of
-    // values into a new array of values. _.pluck() is solved for you
-    // as an example of this.
-    // return _.map(array, function(value) {
-    //   return value[propertyName];
-    // });
-  
+  // TIP: map is really handy when you want to transform an array of
+  // values into a new array of values. _.pluck() is solved for you
+  // as an example of this.
+  // return _.map(array, function(value) {
+  //   return value[propertyName];
+  // });
+
 
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
@@ -169,14 +169,12 @@ var _ = {};
   _.invoke = function(collection, functionOrKey, args) {
     // pass in (item, args) . call more discrete. apply can pass in a list.
     if (typeof functionOrKey === 'string') {
-      return _.each(collection, function(item) {
-        // console.log(functionOrKey[functionOrKey]);
-        // console.log(functionOrKey);
-        return functionOrKey[functionOrKey].apply(this, item);
+      return _.map(collection, function(item) {
+        return functionOrKey[functionOrKey].apply(item, args);
       });
     } else if (typeof functionOrKey === 'function') {
-      return _.each(collection, function(item) {
-        return functionOrKey.apply(this, item);
+      return _.map(collection, function(item, args) {
+        return functionOrKey.apply(item);
       });
     }
   };
@@ -267,8 +265,8 @@ var _ = {};
       return !!iterator(item);
     }, true);
   };
-    // TIP: Try re-using reduce() here.
-  
+  // TIP: Try re-using reduce() here.
+
 
   // pasting in underscore's version for clues:
 
@@ -419,24 +417,24 @@ var _ = {};
       return result;
     };
   };
-    // TIP: These variables are stored in a "closure scope" (worth researching),
-    // so that they'll remain available to the newly-generated function every
-    // time it's called.
-    // var alreadyCalled = false;
-    // var result;
+  // TIP: These variables are stored in a "closure scope" (worth researching),
+  // so that they'll remain available to the newly-generated function every
+  // time it's called.
+  // var alreadyCalled = false;
+  // var result;
 
-    // // TIP: We'll return a new function that delegates to the old one, but only
-    // // if it hasn't been called before.
-    // return function() {
-    //   if (!alreadyCalled) {
-    //     // TIP: .apply(this, arguments) is the standard way to pass on all of the
-    //     // infromation from one function call to another.
-    //     result = func.apply(this, arguments);
-    //     alreadyCalled = true;
-    //   }
-    //   // The new function always returns the originally computed result.
-    //   return result;
-    // };
+  // // TIP: We'll return a new function that delegates to the old one, but only
+  // // if it hasn't been called before.
+  // return function() {
+  //   if (!alreadyCalled) {
+  //     // TIP: .apply(this, arguments) is the standard way to pass on all of the
+  //     // infromation from one function call to another.
+  //     result = func.apply(this, arguments);
+  //     alreadyCalled = true;
+  //   }
+  //   // The new function always returns the originally computed result.
+  //   return result;
+  // };
 
   // Memoize an expensive function by storing its results. You may assume
   // that the function takes only one argument and that it is a primitive.
@@ -453,9 +451,9 @@ var _ = {};
       if (key in result) {
         return result[key];
       } else {
-      result[key] = func.apply(this, arguments);
-      console.log(result);
-      return result[key];
+        result[key] = func.apply(this, arguments);
+        console.log(result);
+        return result[key];
       }
     };
   };
