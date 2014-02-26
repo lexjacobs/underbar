@@ -256,7 +256,18 @@ var _ = {};
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {};
+  _.defaults = function(obj) {
+    var args = Array.prototype.slice.call(arguments);
+    var target = arguments[0];
+    _.each(args.slice(1), function(item){
+      _.each(Object.keys(item), function(key){
+        if(target[key] === undefined){
+          target[key] = item[key];
+        }
+      });
+    });
+    return target;
+  };
 
 
   /**
@@ -296,7 +307,18 @@ var _ = {};
   // _.memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {};
+  _.memoize = function(func) {
+    var remembered = {};
+
+    return function(){
+      var args = Array.prototype.slice.call(arguments, 0);
+      if (remembered[args] === undefined){
+        remembered[args] = func.apply(this, arguments);
+      }
+      return remembered[args];
+    };
+
+  };
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -304,7 +326,12 @@ var _ = {};
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {};
+  _.delay = function(func, wait) {
+    var args = Array.prototype.slice.call(arguments, 2);
+    setTimeout(function(){
+      func.apply(null, args);
+    }, wait);
+  };
 
 
   /**
