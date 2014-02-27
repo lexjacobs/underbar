@@ -167,14 +167,13 @@ var _ = {};
   // If you have an array myParameters and would like to call a function myFunction using the elements in the array as parameters, you can use myFunction.apply(context, myParameters). The first parameter, context, is the execution context for your function call. From inside myFunction, you can access it as this. For this exercise, you should be fine passing in the calling function's this for context. If you're curious, you can read more in the documentation for apply.
 
   _.invoke = function(collection, functionOrKey, args) {
-    // pass in (item, args) . call more discrete. apply can pass in a list.
-    if (typeof functionOrKey === 'string') {
-      return _.map(collection, function(item) {
-        return functionOrKey[functionOrKey].apply(item, args);
+    if(typeof functionOrKey === 'function'){
+      return _.map(collection, function(item){
+        return functionOrKey.apply(item, args);
       });
-    } else if (typeof functionOrKey === 'function') {
-      return _.map(collection, function(item, args) {
-        return functionOrKey.apply(item);
+    } else {
+      return _.map(collection, function(item){
+        return item[functionOrKey].apply(item, args);
       });
     }
   };
@@ -193,15 +192,14 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
-    var previousValue = accumulator;
-    _.each(collection, function(item) {
-      if (previousValue !== undefined) {
-        previousValue = iterator(previousValue, item);
+    _.each(collection, function(item){
+      if(accumulator !== undefined){
+        accumulator = iterator(accumulator, item);
       } else {
-        previousValue = item;
+        accumulator = item;
       }
     });
-    return previousValue;
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -254,16 +252,15 @@ var _ = {};
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    if (iterator === undefined) {
-      iterator = _.identity;
-    }
-    var result = true;
-    return _.reduce(collection, function(result, item) {
-      if (result == false) {
-        return false;
+    // TIP: Try re-using reduce() here.
+    iterator = iterator || _.identity;
+    var allTrue = true;
+    _.each(collection, function(item){
+      if(!iterator(item)){
+        allTrue = false;
       }
-      return !!iterator(item);
-    }, true);
+    });
+    return allTrue;
   };
   // TIP: Try re-using reduce() here.
 
@@ -319,13 +316,14 @@ var _ = {};
       return !!iterator(item);
     }, false);
     // TIP: There's a very clever way to re-use every() here.
-    var anyTruth = false;
-    _.each(collection, function(item) {
-      if ( !! iterator(item) === true && anyTruth === false) {
-        anyTruth = true;
+    iterator = iterator || _.identity;
+    var allTrue = false;
+    _.each(collection, function(item){
+      if(iterator(item)){
+        allTrue = true;
       }
     });
-    return anyTruth;
+    return allTrue;
   };
 
   /**
@@ -346,30 +344,31 @@ var _ = {};
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-
   _.extend = function(obj) {
-    _.each(arguments, function(item) {
-      for (var prop in item) {
-        obj[prop] = item[prop];
-      }
+    var args = Array.prototype.slice.call(arguments);
+    var target = arguments[0];
+    _.each(args.slice(1), function(item){
+      _.each(Object.keys(item), function(key){
+        target[key] = item[key];
+      });
     });
-    return obj;
+    return target;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-    _.each(arguments, function(item) {
-      for (var prop in item) {
-        if (obj[prop] === undefined) {
-          obj[prop] = item[prop];
+    var args = Array.prototype.slice.call(arguments);
+    var target = arguments[0];
+    _.each(args.slice(1), function(item){
+      _.each(Object.keys(item), function(key){
+        if(target[key] === undefined){
+          target[key] = item[key];
         }
-      }
+      });
     });
-    return obj;
+    return target;
   };
-
-
 
   /**
    * FUNCTIONS
@@ -444,38 +443,17 @@ var _ = {};
   // instead if possible.
 
   _.memoize = function(func) {
-    var result = {};
-    return function() {
-      var key = arguments[0];
-      console.log(arguments);
-      if (key in result) {
-        return result[key];
-      } else {
-        result[key] = func.apply(this, arguments);
-        console.log(result);
-        return result[key];
+    var remembered = {};
+
+    return function(){
+      var args = Array.prototype.slice.call(arguments, 0);
+      if (remembered[args] === undefined){
+        remembered[args] = func.apply(this, arguments);
       }
+      return remembered[args];
     };
+
   };
-
-  // fastFib = _.memoize(fib);
-
-  // underscore documentation:
-  // _.memoize = function(func, hasher) {
-  //    var memo = {};
-  //    hasher || (hasher = _.identity);
-  //    return function() {
-  //      var key = hasher.apply(this, arguments);
-  //      return _.has(memo, key) ? memo[key] : (memo[key] = func.apply(this, arguments));
-  //    };
-  //  };
-
-  // this is a cheat: REDO!
-  // _.memoize = function(func) {
-  //   return function() {
-  //     return func.apply(this, arguments);
-  //   };
-  // };
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -485,35 +463,11 @@ var _ = {};
   // call someFunction('a', 'b') after 500ms
 
   _.delay = function(func, wait) {
-    if (arguments.length <= 2) {
-      setTimeout(function() {
-        func.apply(this, args);
-      }, wait);
-    } else {
-      var args = [];
-      _.each(arguments, function(item) {
-        args.push(item);
-      });
-      setTimeout(function() {
-        func.apply(this, args.slice(2));
-      }, wait);
-    }
+    var args = Array.prototype.slice.call(arguments, 2);
+    setTimeout(function(){
+      func.apply(null, args);
+    }, wait);
   };
-
-  // partially working:
-  // _.delay = function(func, wait) {
-  // return setTimeout (func, wait);
-  // };
-
-  // setTimeout( expression, timeout );
-  // function which can be passed the time after which the expression will be executed.
-
-
-  // setTimeout(func.apply(this, args.slice(2)), wait);
-
-
-
-  // setTimeout(arguments.length > 2 ? func.apply(this, arguments.slice(1)) : func, wait);
 
 
   /**
