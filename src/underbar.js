@@ -29,7 +29,7 @@ var _ = {};
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    return n === undefined ? array[array.length - 1] : array.reverse().slice(0, n).reverse();
+    return n === undefined ? array[array.length-1] : array.slice( (array.length-n > 0 ? array.length-n : 0), array.length);
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -133,7 +133,7 @@ var _ = {};
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var set = [];
-    _.each(array, function(item) {
+    _.each(array, function(item){
       set.push(iterator(item));
     });
     return set;
@@ -203,7 +203,7 @@ var _ = {};
   };
 
   // Determine if the array or object contains a given value (using `===`).
-
+  
   // this one was pre-defined. attempting to recreate this myself.
 
   // _.contains = function(collection, target) {
@@ -219,17 +219,23 @@ var _ = {};
   // refactor with 'each' worked. now trying to replicate as 'reduce':
 
   _.contains = function(collection, target) {
-    var found = false;
-    return _.reduce(collection, function(found, item) {
-      if (found === true) {
+
+    return _.reduce(collection, function(wasFound, item) {
+      if(wasFound){
         return true;
       }
-      return item === target;
-    });
+      // can turn next 4 lines into one with the following comment.
+      if(item == target){
+        wasFound = true;
+      }
+      return wasFound;
+      // aka: return item === target;
+    }, false);
   };
 
-  // TIP: Many iteration problems can be most easily expressed in
-  // terms of reduce(). Here's a freebie to demonstrate!
+  // _.contains = function(collection, target) {
+  //   // TIP: Many iteration problems can be most easily expressed in
+  //   // terms of reduce(). Here's a freebie to demonstrate!
   //   return _.reduce(collection, function(wasFound, item) {
   //     if (wasFound) {
   //       return true;
@@ -238,20 +244,14 @@ var _ = {};
   //   }, false);
   // };
 
-  // another simple way to do _.contains:
-  // _.contains = function(collection, target) {
-  //     var result = false;
-  //     _.each(collection, function(item) {
-  //       if (item === target) {
-  //         result = true;
-  //       }
-  //     });
-  //     return result;
-  //   };
-
-
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    // if(collection == []){
+    //   return true;
+    // }
+    if(iterator === undefined){
+      iterator = _.identity;
+    }
     // TIP: Try re-using reduce() here.
     iterator = iterator || _.identity;
     var allTrue = true;
@@ -402,19 +402,25 @@ var _ = {};
   // };
 
   // re-creating _.once after studying it above:
-  _.once = function(func) {
-    var alreadyCalled = false;
+_.once = function(func) {
+    // TIP: These variables are stored in a "closure scope" (worth researching),
+    // so that they'll remain available to the newly-generated function every
+    // time it's called.
     var result;
-
+    var alreadyCalled = false;
+    // TIP: We'll return a new function that delegates to the old one, but only
+    // if it hasn't been called before.
     return function() {
-      if (alreadyCalled !== true) {
-        result = func.apply(this, arguments);
-        alreadyCalled = true;
+        if (alreadyCalled === false) {
+          result = func.apply(this, arguments);
+          alreadyCalled = true;
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
-      }
-      return result;
-    };
+        }
+        return result;
+      };
+      // The new function always returns the originally computed result.
+      
   };
   // TIP: These variables are stored in a "closure scope" (worth researching),
   // so that they'll remain available to the newly-generated function every
@@ -434,6 +440,7 @@ var _ = {};
   //   // The new function always returns the originally computed result.
   //   return result;
   // };
+
 
   // Memoize an expensive function by storing its results. You may assume
   // that the function takes only one argument and that it is a primitive.
@@ -455,6 +462,13 @@ var _ = {};
 
   };
 
+  // this is a cheat: REDO!
+  // _.memoize = function(func) {
+  //   return function() {
+  //     return func.apply(this, arguments);
+  //   };
+  // };
+
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
@@ -463,12 +477,21 @@ var _ = {};
   // call someFunction('a', 'b') after 500ms
 
   _.delay = function(func, wait) {
-    var args = Array.prototype.slice.call(arguments, 2);
-    setTimeout(function(){
-      func.apply(null, args);
-    }, wait);
+    var args = Array.prototype.slice.call(arguments);
+    if (args.length > 2) {
+      return setTimeout(func.apply(this, args.slice(2)), wait);
+    } else {
+      return setTimeout(func, wait);
+    }
   };
 
+  // partially working:
+  // _.delay = function(func, wait) {
+  // return setTimeout (func, wait);
+  // };
+
+// setTimeout( expression, timeout );
+// function which can be passed the time after which the expression will be executed.
 
   /**
    * ADVANCED COLLECTION OPERATIONS
@@ -487,6 +510,10 @@ var _ = {};
     }
     return arrayCopy;
   };
+
+  
+
+  // STOP HERE FOR NOW
 
   /**
    * Note: This is the end of the pre-course curriculum. Feel free to continue,
